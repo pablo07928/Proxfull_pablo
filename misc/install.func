@@ -8,7 +8,7 @@ color() {
   DGN=$(echo "\033[32m")
   CL=$(echo "\033[m")
   RETRY_NUM=10
-  RETRY_EVERY=3
+  RETRY_EVERY=6
   CM="${GN}✓${CL}"
   CROSS="${RD}✗${CL}"
   BFR="\\r\\033[K"
@@ -86,6 +86,7 @@ msg_error() {
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
 setting_up_container() {
   msg_info "Setting up Container OS"
+  set -x
   sed -i "/$LANG/ s/\(^# \)//" /etc/locale.gen
   locale_line=$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print $1}' | head -n 1)
   echo "LANG=${locale_line}" >/etc/default/locale
@@ -113,6 +114,7 @@ setting_up_container() {
 
 # This function checks the network connection by pinging a known IP address and prompts the user to continue if the internet is not connected
 network_check() {
+  set -x
   set +e
   trap - ERR
   ipv4_connected=false
